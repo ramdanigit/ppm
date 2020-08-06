@@ -1,0 +1,1 @@
+{"version":3,"sources":["index.css"],"names":[],"mappings":"AAAA,EAGE,qBACF,CACA,kBAJE,SAAU,CACV,QAWF,CARA,gBAGE,wBAAyB,CACzB,WAAY,CACZ,UAGF","file":"main.ace05b41.chunk.css","sourcesContent":["* {\n  padding: 0;\n  margin: 0;\n  box-sizing: border-box;\n}\nhtml,\nbody,\n#root {\n  background-color: #fafafa;\n  height: 100%;\n  width: 100%;\n  padding: 0;\n  margin: 0;\n}\n"]}
