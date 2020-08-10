@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
-import Hero from "assets/img/hero03.png";
-import Hero1 from "assets/img/hero01.png";
+import Hero from "assets/img/2.jpg";
+import Hero1 from "assets/img/1.jpg";
 
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   img: {
-    borderRadius: "2%",
+    borderRadius: "0%",
     [theme.breakpoints.down("sm")]: {
       borderRadius: 0,
     },
