@@ -85,16 +85,30 @@ function stableSort(array, comparator) {
 
 function TableView(props) {
   const classes = useStyles();
-
+  // const [val, setVal]
   const data = React.useContext(KelurahanContext);
   console.log(data.state);
   const lowercasedFilter = data.query.toLowerCase();
   let filteredData = data.state.filter((value) => {
-    return (
-      value.kelurahan.toLowerCase().includes(lowercasedFilter) ||
-      value.User.username.toLowerCase().includes(lowercasedFilter) ||
-      value.Kecamatan.kecamatan.toLowerCase().includes(lowercasedFilter)
-    );
+    if (value.Kecamatan && value.User) {
+      return (
+        value.kelurahan.toLowerCase().includes(lowercasedFilter) ||
+        value.Kecamatan.kecamatan.toLowerCase().includes(lowercasedFilter) ||
+        value.User.username.toLowerCase().includes(lowercasedFilter)
+      );
+    }
+    if (!value.User) {
+      return (
+        value.kelurahan.toLowerCase().includes(lowercasedFilter) ||
+        value.Kecamatan.kecamatan.toLowerCase().includes(lowercasedFilter)
+      );
+    }
+    if (!value.Kecamatan) {
+      return (
+        value.kelurahan.toLowerCase().includes(lowercasedFilter) ||
+        value.User.username.toLowerCase().includes(lowercasedFilter)
+      );
+    }
   });
 
   const alertContext = React.useContext(AlertContext);
@@ -170,7 +184,7 @@ function TableView(props) {
       console.log(error);
     }
   };
-
+  console.log(data.state);
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
@@ -244,7 +258,9 @@ function TableView(props) {
                         align="left"
                         className={classes.cell}
                       >
-                        {produks.Kecamatan.kecamatan}
+                        {produks.Kecamatan.kecamatan
+                          ? produks.Kecamatan.kecamatan
+                          : ""}
                       </TableCell>
                       <TableCell
                         component="th"

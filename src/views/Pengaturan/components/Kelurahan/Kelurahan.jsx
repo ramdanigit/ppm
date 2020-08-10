@@ -20,6 +20,8 @@ const Kelurahan = () => {
             username: "",
             type_user: "",
             password: "",
+            Kecamatan: { kecamatan: "" },
+            User: {},
           }
     );
   };

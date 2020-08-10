@@ -90,16 +90,7 @@ const FormInput = () => {
 
   const doSubmit = async (e) => {
     e.preventDefault();
-    // if (!val.kecamatan) {
-    //   kecRef.current.focus();
-    //   setRef({
-    //     ...ref,
-    //     kecamatan: true,
-    //     message: "Isi Kecamatan!!",
-    //   });
 
-    //   return true;
-    // }
     try {
       open.updateState(true, false, "success", "");
       console.log(val);
@@ -200,8 +191,6 @@ const FormInput = () => {
                   <InputLabel htmlFor="password">Password</InputLabel>
                   <OutlinedInput
                     id="password"
-                    // inputRef={passRef}
-                    // error={ref.password}
                     type={val.showPassword ? "text" : "password"}
                     value={val.password.trim()}
                     required

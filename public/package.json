@@ -1,0 +1,65 @@
+{
+  "name": "partisipasi-app",
+  "homepage": "http://ppm.ptbangunsolusimitra.com",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@date-io/date-fns": "^2.8.0",
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
+    "@material-ui/pickers": "^3.2.10",
+    "@react-pdf/renderer": "^1.6.10",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "antd": "^4.4.2",
+    "axios": "^0.19.2",
+    "bootstrap": "^4.5.0",
+    "chart.js": "^2.9.3",
+    "classnames": "^2.2.6",
+    "date-fns": "^2.15.0",
+    "file-saver": "^2.0.2",
+    "fontsource-roboto": "^2.1.4",
+    "history": "^5.0.0",
+    "html2canvas": "^1.0.0-rc.5",
+    "jspdf": "^1.5.3",
+    "jspdf-autotable": "^2.3.5",
+    "jwt-decode": "^2.2.0",
+    "moment": "^2.27.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.13.1",
+    "react-chartjs-2": "^2.9.0",
+    "react-dom": "^16.13.1",
+    "react-perfect-scrollbar": "^1.5.8",
+    "react-responsive-carousel": "^3.2.9",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.4.1",
+    "react-slick": "^0.26.1",
+    "react-to-pdf": "0.0.11",
+    "reactstrap": "^8.5.1",
+    "slick-carousel": "^1.8.1",
+    "styled-components": "^5.1.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
