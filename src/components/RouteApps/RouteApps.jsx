@@ -4,11 +4,6 @@ import Alert from "components/Alert";
 
 import SignInContext from "context/SignInContext";
 import AlertContext from "context/AlertContext";
-import UserContext from "context/UserContext";
-
-import auth from "service/authService";
-import { getCurrentUser } from "service/authLurahService";
-import { getDataByOne } from "service/userService";
 
 function RouteApps() {
   const [open, setOpen] = React.useState({
@@ -17,8 +12,24 @@ function RouteApps() {
     message: "",
     variant: "",
   });
-  const [user, setUser] = React.useState({});
-  const [signIn, setSignIn] = React.useState({});
+  const [signIn, setSignIn] = React.useState({
+    isDashboard: false,
+    isDataSatuan: false,
+    isDataKumpulan: false,
+    isDataKlaim: false,
+    isDataRestitusi: false,
+    isKirimDataPeserta: false,
+    isKirimDataKlaim: false,
+    isKirimDataRestitusi: false,
+    isDownloadUploadData: false,
+    isReportDataPeserta: false,
+    isReportDataKlaim: false,
+    isReportDataRestitusi: false,
+    isRekonsiliasi: false,
+    isMaster: false,
+    isAksesUser: false,
+    isProdukAsuransi: false,
+  });
 
   const updateSignIn = (user) => {
     setSignIn(user);
@@ -27,21 +38,6 @@ function RouteApps() {
   const updateValue = (b, s, v, m) => {
     setOpen({ backdrop: b, snackbar: s, variant: v, message: m });
   };
-  // const getUser = async () => {
-  //   // const data = await getDataByOne(getCurrentUser().id);
-  //   // if (getCurrentUser == "RW") {
-  //   //   setSignIn(
-  //   //     data.data
-  //   //       ? {
-  //   //           no_rw: data.data.RW.no_rw,
-  //   //           kecamatan: data.data.Kecamatan.kecamatan,
-  //   //           kelurahan: data.data.Kelurahan.kelurahan,
-  //   //         }
-  //   //       : {}
-  //   //   );
-  //   // }
-  // };
-
   return (
     <React.Fragment>
       <AlertContext.Provider value={{ state: open, updateState: updateValue }}>

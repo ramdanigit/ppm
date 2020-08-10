@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import { NavBar } from "components";
 import { Sidebar } from "./components";
 import { makeStyles } from "@material-ui/styles";
-import contextButton from "context/ButtonNavContext";
 
 const useStyles = makeStyles(() => ({
   root: {
+    // paddingTop: 64,
     height: "100%",
   },
   content: {
@@ -33,18 +33,11 @@ const Minimal = (props) => {
   return (
     <div className={classes.root}>
       <NavBar sidebarOpen={handleSidebarOpen} />
-      <contextButton.Provider
-        value={{
-          open: handleSidebarOpen,
-          close: handleSidebarClose,
-        }}
-      >
-        <Sidebar
-          onClose={handleSidebarClose}
-          open={openSidebar}
-          variant="temporary"
-        />
-      </contextButton.Provider>
+      <Sidebar
+        onClose={handleSidebarClose}
+        open={openSidebar}
+        variant="temporary"
+      />
       <main className={classes.content}>{children}</main>
     </div>
   );

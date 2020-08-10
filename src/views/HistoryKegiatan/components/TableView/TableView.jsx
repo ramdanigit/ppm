@@ -14,31 +14,20 @@ import EnhancedTableToolbar from "./components/EnhancedTableToolbar";
 import EnhancedTableHead from "./components/EnhancedTableHead";
 import DialogFull from "components/DialogFull";
 import FormUpdate from "./components/FormUpdate/FormUpdate";
-import moment, { months } from "moment";
 // import VisibilityIcon from "@material-ui/icons/Visibility";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 // import FormInput from "./components/FormInput/FormInput";
 import DialogBasic from "components/DialogBasic";
 // import Avatar from "@material-ui/core/Avatar";
 import Grid from "@material-ui/core/Grid";
-import {
-  DatePicker,
-  TimePicker,
-  Select as SelectAnt,
-  Space,
-  Button as ButtonAnt,
-} from "antd";
-import { Typography } from "@material-ui/core";
 
 import AlertContext from "context/AlertContext";
 //services
 import master from "service/kegiatanService";
-import { Box } from "@material-ui/core";
-// import { DatePicker } from "components";
+
 // import { image } from "config.json";
 import { makeStyles } from "@material-ui/core/styles";
 import KegiatanContext from "context/KegiatanContext";
-// import { DatePicker, TimePicker, Select, Space } from "antd";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -100,61 +89,13 @@ function TableView(props) {
   const classes = useStyles();
 
   const data = React.useContext(KegiatanContext);
-  const [type, setType] = React.useState("month");
-
-  function PickerWithType({ type, onChange, style, val }) {
-    return (
-      <DatePicker picker={type} onChange={onChange} style={style} value={val} />
-    );
-  }
-  const months = new Array(12);
-  months[0] = "Januari";
-  months[1] = "Februari";
-  months[2] = "Maret";
-  months[3] = "April";
-  months[4] = "Mei";
-  months[5] = "Juni";
-  months[6] = "Juli";
-  months[7] = "Agustus";
-  months[8] = "September";
-  months[9] = "Oktober";
-  months[10] = "November";
-  months[11] = "Desember";
-  const [date, setDate] = React.useState("");
+  console.log(data.state);
   const lowercasedFilter = data.query.toLowerCase();
-  const [datas, setData] = React.useState(data.state);
-  // console.log(data.state);
   let filteredData = data.state.filter((value) => {
-    const split = date.split("-");
-    if (type === "month" && split[1]) {
-      return (
-        value.tahun
-          .toString()
-          .includes(split[0] ? split[0] : lowercasedFilter) &&
-        value.bulan
-          .toLowerCase()
-          .includes(
-            split[1]
-              ? months[parseInt(split[1]) - 1].toLowerCase()
-              : lowercasedFilter
-          )
-      );
-    }
-    if (type === "year" && split[0]) {
-      return (
-        value.tahun.toString().includes(split[0]) &&
-        (value.nama_bidang.toLowerCase().includes(lowercasedFilter) ||
-          value.bulan.toLowerCase().includes(lowercasedFilter))
-      );
-    }
-    return (
-      value.nama_bidang.toLowerCase().includes(lowercasedFilter) ||
-      value.bulan.toLowerCase().includes(lowercasedFilter)
-    );
+    return value.nama_bidang.toLowerCase().includes(lowercasedFilter);
   });
 
   const alertContext = React.useContext(AlertContext);
-  // const [type, setType] = useState("month");
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("kode_produk");
   const [page, setPage] = React.useState(0);
@@ -228,45 +169,8 @@ function TableView(props) {
     }
   };
 
-  const { Option } = SelectAnt;
-
-  function onChangeDate(date, dateString) {
-    setDate(dateString);
-  }
-  // const filterDate = () => {
-  //   // if (type === "month") {
-  //   // const split = date.split("-");
-  //   // filteredData = data.state.filter((value) => {
-  //   //   return (
-  //   //     value.tahun.toString().includes(split[0].toString()) &&
-  //   //     value.bulan.includes(months[parseInt(split[1]) - 1])
-  //   //   );
-  //   // });
-  //   // }
-  // };
-
   return (
     <div className={classes.root}>
-      <Box padding="20px 20px 20px 0" maxWidth="400px">
-        <Typography>Filter :</Typography>
-        <Space>
-          <SelectAnt value={type} onChange={setType}>
-            <Option value="month">Bulan</Option>
-            <Option value="year">Year</Option>
-          </SelectAnt>
-
-          <PickerWithType
-            type={type}
-            onChange={onChangeDate}
-            style={{ width: "100%" }}
-            val={date ? moment(date) : null}
-          />
-          {/* <ButtonAnt type="primary" onClick={filterDate}>
-            Filter
-          </ButtonAnt> */}
-        </Space>
-      </Box>
-
       <Paper className={classes.paper}>
         <EnhancedTableToolbar
           addClick={insertUser}
@@ -312,6 +216,46 @@ function TableView(props) {
                             <OpenInNewIcon className={classes.editIcon} />
                           </Button>
                         </ButtonGroup>
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        // padding="none"
+                        align="left"
+                        className={classes.cell}
+                      >
+                        {produks.RW.no_rw}
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        // padding="none"
+                        align="left"
+                        className={classes.cell}
+                      >
+                        {produks.RW.Kelurahan.kelurahan}
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        // padding="none"
+                        align="left"
+                        className={classes.cell}
+                      >
+                        {produks.RW.Kecamatan.kecamatan}
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        // padding="none"
+                        align="left"
+                        className={classes.cell}
+                      >
+                        {produks.kota}
                       </TableCell>
                       <TableCell
                         component="th"
@@ -391,7 +335,7 @@ function TableView(props) {
                         align="left"
                         className={classes.cell}
                       >
-                        {produks.jumlah_orang_terlibat}
+                        {produks.jumlah_biaya}
                       </TableCell>
                       <TableCell
                         component="th"
@@ -401,7 +345,7 @@ function TableView(props) {
                         align="left"
                         className={classes.cell}
                       >
-                        {produks.jumlah_biaya}
+                        {produks.jumlah_orang_terlibat}
                       </TableCell>
                     </TableRow>
                   );

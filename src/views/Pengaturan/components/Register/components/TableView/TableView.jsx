@@ -233,7 +233,7 @@ function TableView(props) {
                         align="left"
                         className={classes.cell}
                       >
-                        {produks.nama_rw ? produks.nama_rw : ""}
+                        {produks.nama_rw}
                       </TableCell>
                       <TableCell
                         component="th"
@@ -243,7 +243,7 @@ function TableView(props) {
                         align="left"
                         className={classes.cell}
                       >
-                        {produks.User.username ? produks.User.username : ""}
+                        {produks.User.username}
                       </TableCell>
                       <TableCell
                         component="th"
@@ -253,9 +253,7 @@ function TableView(props) {
                         align="left"
                         className={classes.cell}
                       >
-                        {produks.Kecamatan.kecamatan
-                          ? produks.Kecamatan.kecamatan
-                          : ""}
+                        {produks.Kecamatan.kecamatan}
                       </TableCell>
                       <TableCell
                         component="th"
@@ -265,9 +263,7 @@ function TableView(props) {
                         align="left"
                         className={classes.cell}
                       >
-                        {produks.Kelurahan.kelurahan
-                          ? produks.Kelurahan.kelurahan
-                          : ""}
+                        {produks.Kelurahan.kelurahan}
                       </TableCell>
 
                       <TableCell
@@ -278,7 +274,7 @@ function TableView(props) {
                         align="left"
                         className={classes.cell}
                       >
-                        {produks.alamat ? produks.alamat : ""}
+                        {produks.alamat}
                       </TableCell>
 
                       <TableCell

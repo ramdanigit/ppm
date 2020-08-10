@@ -13,7 +13,9 @@ import {
   TextField,
   IconButton,
 } from "@material-ui/core";
-import Logo from "assets/img/logo.svg";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+import Logo from "assets/img/hero.png";
 import KegiatanContext from "context/KegiatanContext";
 import AlertContext from "context/AlertContext";
 import PrintIcon from "@material-ui/icons/Print";
@@ -198,151 +200,271 @@ const FormInput = (props) => {
           />
           <Divider />
           <CardContent>
-            <div class="invoice-box">
-              <div class="appbar">
-                <img src={Logo} alt="logo" width="100%" class="logo" />
-                <h3 class="title">
-                  Partisipasi Masyarakat Dalam Pembangunan Fisik
-                </h3>
-              </div>
-              <div class="divider"></div>
-              <table style={{ width: "100%", paddingTop: "10px" }}>
-                <tr>
-                  <td colspan="3" class="table-title">
-                    Data
-                  </td>
-                </tr>
-                <tr>
-                  <td class="th">RW</td>
-                  <td class="colon">:</td>
-                  <td class="isi">{val.RW.no_rw}</td>
-                </tr>
-                <tr>
-                  <td class="th">Kelurahan/desa</td>
-                  <td class="colon">:</td>
-                  <td class="isi">{val.RW.Kelurahan.kelurahan}</td>
-                </tr>
-                <tr>
-                  <td class="th">Kecamatan</td>
-                  <td class="colon">:</td>
-                  <td class="isi">{val.RW.Kecamatan.kecamatan}</td>
-                </tr>
-                <tr>
-                  <td class="th">Kota/Kabupaten</td>
-                  <td class="colon">:</td>
-                  <td class="isi">{val.kota}</td>
-                </tr>
-                <tr>
-                  <td class="th">Bulan</td>
-                  <td class="colon">:</td>
-                  <td class="isi">{val.bulan}</td>
-                </tr>
-                <tr>
-                  <td class="th">Tahun</td>
-                  <td class="colon">:</td>
-                  <td class="isi">{val.tahun}</td>
-                </tr>
-              </table>
-              <div class="divider"></div>
-              <table style={{ width: "100%" }} class="table-kegiatan p-10">
-                <tr class="table-kegiatan">
-                  <td class="table-kegiatan" colspan="9">
-                    {val.nama_bidang}
-                  </td>
-                </tr>
-                <tr class="table-kegiatan">
-                  <th class="table-kegiatan" rowspan="2">
-                    Uraian
-                  </th>
-                  <th class="table-kegiatan" colspan="4">
-                    Tingkat Kehadiran
-                  </th>
-                  <th class="table-kegiatan" rowspan="2">
-                    Presentase (RP.)
-                  </th>
-                  <th class="table-kegiatan" rowspan="2">
-                    IHNK (RP.)
-                  </th>
-                  <th class="table-kegiatan" rowspan="2">
-                    IPMDP
-                  </th>
-                  <th class="table-kegiatan" rowspan="2">
-                    Partisipasi Masyarakat
-                  </th>
-                </tr>
-                <tr class="table-kegiatan">
-                  <td class="table-kegiatan" colspan="2">
-                    diUndang
-                  </td>
-                  <td class="table-kegiatan" colspan="2">
-                    Hadir
-                  </td>
-                </tr>
-
-                <tr class="table-kegiatan">
-                  <td class="table-kegiatan">{val.uraian_kegiatan}</td>
-                  <td class="table-kegiatan">{val.jumlah_orang_diundang}</td>
-                  <td class="table-kegiatan">org</td>
-                  <td class="table-kegiatan">{val.jumlah_orang_hadir}</td>
-                  <td class="table-kegiatan">org</td>
-                  <td class="table-kegiatan">{val.presentase}</td>
-                  <td class="table-kegiatan">{val.IHNK}</td>
-                  <td class="table-kegiatan">{val.IPMDP}</td>
-                  <td class="table-kegiatan">{val.partisipasi_masyarakat}</td>
-                </tr>
-              </table>
-            </div>
-            <Divider />
-            Foto Kegiatan
-            {val.dokumen1 && (
-              <a
-                href={`http://api.ptbangunsolusimitra.com/img/dokumen/resized/${val.dokumen1}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Dokumen 1
-              </a>
-            )}
-            <br />
-            {val.dokumen2 && (
-              <a
-                href={`http://api.ptbangunsolusimitra.com/img/dokumen/resized/${val.dokumen2}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Dokumen 2
-              </a>
-            )}
-            <br />
-            {val.dokumen3 && (
-              <a
-                href={`http://api.ptbangunsolusimitra.com/img/dokumen/resized/${val.dokumen3}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Dokumen 3
-              </a>
-            )}
-            <br />
-            {val.dokumen4 && (
-              <a
-                href={`http://api.ptbangunsolusimitra.com/img/dokumen/resized/${val.dokumen4}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Dokumen 4
-              </a>
-            )}
-            <br />
-            {val.dokumen5 && (
-              <a
-                href={`http://api.ptbangunsolusimitra.com/img/dokumen/resized/${val.dokumen5}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Dokumen 5
-              </a>
-            )}
+            <Grid container spacing={1}>
+              <Grid item sm={6} xs={12}>
+                <TextField
+                  inputRef={kecRef}
+                  disabled
+                  variant="outlined"
+                  margin="normal"
+                  color="primary"
+                  value={val.RW.no_ktp.toLowerCase()}
+                  onChange={updateField}
+                  fullWidth
+                  label="NIK"
+                  name="kecamatan"
+                  autoFocus
+                />
+                <TextField
+                  inputRef={kecRef}
+                  disabled
+                  variant="outlined"
+                  margin="normal"
+                  color="primary"
+                  value={val.RW.nama_rw.toLowerCase()}
+                  onChange={updateField}
+                  fullWidth
+                  label="Nama RW"
+                  name="kecamatan"
+                  autoFocus
+                />
+                <TextField
+                  inputRef={kecRef}
+                  disabled
+                  variant="outlined"
+                  margin="normal"
+                  color="primary"
+                  value={val.RW.no_rw.toString().toLowerCase()}
+                  onChange={updateField}
+                  fullWidth
+                  label="NO RW"
+                  name="kecamatan"
+                  autoFocus
+                />
+              </Grid>
+              <Grid item sm={6} xs={12}>
+                <TextField
+                  inputRef={kecRef}
+                  disabled
+                  variant="outlined"
+                  margin="normal"
+                  color="primary"
+                  value={val.RW.Kelurahan.kelurahan.toLowerCase()}
+                  onChange={updateField}
+                  fullWidth
+                  label="Kelurahan"
+                  name="kecamatan"
+                  autoFocus
+                />
+                <TextField
+                  inputRef={kecRef}
+                  disabled
+                  variant="outlined"
+                  margin="normal"
+                  color="primary"
+                  value={val.bulan}
+                  onChange={updateField}
+                  fullWidth
+                  label="Bulan"
+                  name="kecamatan"
+                  autoFocus
+                />
+                <TextField
+                  inputRef={kecRef}
+                  disabled
+                  variant="outlined"
+                  margin="normal"
+                  color="primary"
+                  value={val.tahun}
+                  onChange={updateField}
+                  fullWidth
+                  label="Tahun"
+                  name="kecamatan"
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  inputRef={kecRef}
+                  disabled
+                  variant="outlined"
+                  margin="normal"
+                  color="primary"
+                  value={val.nama_bidang}
+                  onChange={updateField}
+                  fullWidth
+                  label="Nama Bidang"
+                  name="kecamatan"
+                  autoFocus
+                />
+                <TextField
+                  inputRef={kecRef}
+                  disabled
+                  variant="outlined"
+                  margin="normal"
+                  color="primary"
+                  value={val.nama_kegiatan}
+                  onChange={updateField}
+                  fullWidth
+                  label="Nama Kegiatan"
+                  name="kecamatan"
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  inputRef={kecRef}
+                  disabled
+                  variant="outlined"
+                  margin="normal"
+                  color="primary"
+                  value={val.jumlah_orang + " /org"}
+                  onChange={updateField}
+                  fullWidth
+                  label="Jumlah Orang"
+                  name="kecamatan"
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  inputRef={kecRef}
+                  disabled
+                  variant="outlined"
+                  margin="normal"
+                  color="primary"
+                  value={val.waktu + " /bln"}
+                  onChange={updateField}
+                  fullWidth
+                  label="Waktu"
+                  name="kecamatan"
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  inputRef={kecRef}
+                  disabled
+                  variant="outlined"
+                  margin="normal"
+                  color="primary"
+                  value={val.jumlah_orang_terlibat + " /org"}
+                  onChange={updateField}
+                  fullWidth
+                  label="Jumlah Orang Terlibat"
+                  name="kecamatan"
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  inputRef={kecRef}
+                  disabled
+                  variant="outlined"
+                  margin="normal"
+                  color="primary"
+                  value={"Rp. " + val.pembayaran_per_orang}
+                  onChange={updateField}
+                  fullWidth
+                  label="Pembayaran per-orang"
+                  name="kecamatan"
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  inputRef={kecRef}
+                  disabled
+                  variant="outlined"
+                  margin="normal"
+                  color="primary"
+                  value={"Rp. " + val.jumlah_biaya}
+                  onChange={updateField}
+                  fullWidth
+                  label="Jumlah Biaya"
+                  name="kecamatan"
+                  autoFocus
+                />
+              </Grid>
+              <Grid item sm={6} xs={12}>
+                <TextField
+                  inputRef={kecRef}
+                  disabled
+                  variant="outlined"
+                  margin="normal"
+                  color="primary"
+                  value={"Rp. " + parseInt(dataUpm) / 25}
+                  onChange={updateField}
+                  fullWidth
+                  label="IHNK"
+                  name="kecamatan"
+                  autoFocus
+                />
+              </Grid>
+              <Grid item sm={6} xs={12}>
+                <TextField
+                  inputRef={kecRef}
+                  disabled
+                  variant="outlined"
+                  margin="normal"
+                  color="primary"
+                  value={"Rp. " + parseInt(dataUpm) / 25}
+                  onChange={updateField}
+                  fullWidth
+                  label="IPMDP"
+                  name="kecamatan"
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={12}>
+                Foto Kegiatan
+                <Divider />
+                {val.dokumen1 && (
+                  <a
+                    href={`http://192.168.0.100:3900/img/dokumen/resized/${val.dokumen1}`}
+                    target="_blank"
+                  >
+                    Dokumen 1
+                  </a>
+                )}
+                <br />
+                {val.dokumen2 && (
+                  <a
+                    href={`http://192.168.0.100:3900/img/dokumen/resized/${val.dokumen2}`}
+                    target="_blank"
+                  >
+                    Dokumen 2
+                  </a>
+                )}
+                <br />
+                {val.dokumen3 && (
+                  <a
+                    href={`http://192.168.0.100:3900/img/dokumen/resized/${val.dokumen3}`}
+                    target="_blank"
+                  >
+                    Dokumen 3
+                  </a>
+                )}
+                <br />
+                {val.dokumen4 && (
+                  <a
+                    href={`http://192.168.0.100:3900/img/dokumen/resized/${val.dokumen4}`}
+                    target="_blank"
+                  >
+                    Dokumen 4
+                  </a>
+                )}
+                <br />
+                {val.dokumen5 && (
+                  <a
+                    href={`http://192.168.0.100:3900/img/dokumen/resized/${val.dokumen5}`}
+                    target="_blank"
+                  >
+                    Dokumen 5
+                  </a>
+                )}
+              </Grid>
+            </Grid>
           </CardContent>
           <Divider />
         </form>

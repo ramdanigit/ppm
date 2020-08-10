@@ -4,7 +4,6 @@ import clsx from "clsx";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/styles";
 import { List, ListItem, Button, colors } from "@material-ui/core";
-import contextButtonNav from "context/ButtonNavContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -48,7 +47,6 @@ const CustomRouterLink = forwardRef((props, ref) => (
 
 const SidebarNav = (props) => {
   const { pages, className, ...rest } = props;
-  const btn = React.useContext(contextButtonNav);
 
   const classes = useStyles();
 
@@ -61,7 +59,6 @@ const SidebarNav = (props) => {
             className={classes.button}
             component={CustomRouterLink}
             to={page.href}
-            onClick={btn.close}
           >
             <div className={classes.icon}>{page.icon}</div>
             {page.title}
