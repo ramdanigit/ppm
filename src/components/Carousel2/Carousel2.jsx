@@ -8,7 +8,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   img: {
-    borderRadius: "0%",
+    borderRadius: "2%",
     [theme.breakpoints.down("sm")]: {
       borderRadius: 0,
     },
