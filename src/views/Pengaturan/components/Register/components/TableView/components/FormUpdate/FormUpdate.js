@@ -16,7 +16,6 @@ import {
   InputLabel,
   OutlinedInput,
   InputAdornment,
-  FormHelperText,
   Select,
 } from "@material-ui/core";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";

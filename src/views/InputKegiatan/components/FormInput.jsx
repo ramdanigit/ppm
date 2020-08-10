@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/styles";
 import {
-  Typography,
+  Avatar,
   Card,
   CardHeader,
   CardContent,
@@ -25,6 +25,7 @@ import {
   ListItemText,
   Paper,
 } from "@material-ui/core";
+import moment from "moment";
 import { getDataRW } from "service/rwServices";
 import auth from "service/authService";
 import AlertContext from "context/AlertContext";
@@ -32,6 +33,9 @@ import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { registerData } from "service/kegiatanService";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
 // import auth from "service/authService";
+import { Input, Select as SelectAnt, DatePicker, InputNumber } from "antd";
+
+const { Option } = SelectAnt;
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -82,12 +86,17 @@ const useStyles = makeStyles((theme) => ({
   bgg: {
     backgroundColor: "black",
   },
+  large: {
+    width: theme.spacing(7),
+    height: theme.spacing(7),
+  },
 }));
 
 const FormInput = () => {
   const classes = useStyles();
   const month = new Date().getUTCMonth() + 1;
   const year = new Date().getUTCFullYear();
+  const [waktu, setWaktu] = React.useState({ jam: 1, hari: 2, bulan: 3 });
   const [val, setVal] = React.useState({
     // no_rw: auth.getCurrentUser().no_rw,
     kelurahan: "BOJONGSOANG",
@@ -97,16 +106,37 @@ const FormInput = () => {
     tahun: year,
     nama_bidang: "",
     nama_kegiatan: "",
-    jumlah_orang: "",
+    barang: "",
+    satuan_barang: "",
     waktu: "",
+    satuan_waktu: "",
     pembayaran_per_orang: "",
     jumlah_biaya: "",
     jumlah_orang_terlibat: "",
   });
   const [subKegiatan, setSubKegiatan] = React.useState("");
+  const [lainnya, setLainnya] = React.useState("");
   const open = React.useContext(AlertContext);
   const updateSub = (e) => {
     setSubKegiatan(e.target.value);
+  };
+  const selectSatuanWaktu = (value) => {
+    setVal({
+      ...val,
+      satuan_waktu: value,
+    });
+  };
+  const updateFieldBarang = (value) => {
+    setVal({
+      ...val,
+      barang: value,
+    });
+  };
+  const updateFieldSatuan = (value) => {
+    setVal({
+      ...val,
+      satuan_barang: value,
+    });
   };
   const updateField = (e) => {
     setVal({
@@ -129,7 +159,7 @@ const FormInput = () => {
       "dokumen4",
       "dokumen5",
     ];
-    if (e.target.files.length >= 5) {
+    if (e.target.files.length > 5) {
       alert("Batas File Foto Hanya 5");
       return true;
     }
@@ -154,13 +184,60 @@ const FormInput = () => {
     const a = await getDataRW(auth.getCurrentUser().RWId);
     setRW(a.data);
   };
-  const doSubmit = async (e) => {
-    e.preventDefault();
+  const [date, setDate] = React.useState("");
+  function onChangeDate(date, dateString) {
     const month = new Date().getUTCMonth() + 1;
     const year = new Date().getUTCFullYear();
-    // console.log(auth.getCurrentUser() );
+    const hari = new Date().getUTCDate() + 1;
+
+    const data = dateString.split("-");
+    if (parseInt(data[0]) > year) {
+      alert("masukan Tahun Sekarang");
+      setDate("");
+      return "";
+    }
+    if (parseInt(data[0]) < year) {
+      alert("masukan Tahun Sekarang");
+      setDate("");
+      return "";
+    }
+    if (parseInt(data[1]) > month) {
+      alert("masukan Bulan Sekarang");
+      setDate("");
+      return "";
+    }
+    if (parseInt(data[1]) < month) {
+      alert("masukan Bulan Sekarang");
+      setDate("");
+      return "";
+    }
+    if (parseInt(data[2]) > hari) {
+      alert("masukan Hari Sekarang atau Hari sebelumnya !");
+      setDate("");
+      return "";
+    }
+
+    setDate(dateString);
+  }
+  const doSubmit = async (e) => {
+    e.preventDefault();
+    const months = new Array(12);
+    months[0] = "Januari";
+    months[1] = "Februari";
+    months[2] = "Maret";
+    months[3] = "April";
+    months[4] = "Mei";
+    months[5] = "Juni";
+    months[6] = "Juli";
+    months[7] = "Agustus";
+    months[8] = "September";
+    months[9] = "Oktober";
+    months[10] = "November";
+    months[11] = "Desember";
     let form_data = new FormData();
-    console.log(rw[0].kelurahan);
+    // console.log(rw[0].kelurahan);
+    const datePilih = date.split("-");
+    console.log(val);
     try {
       if (a) {
         form_data.append("dokumen", a);
@@ -179,26 +256,34 @@ const FormInput = () => {
       }
       form_data.append("RWId", auth.getCurrentUser().RWId);
       form_data.append("kota", "Bandung");
-      form_data.append("bulan", month);
-      form_data.append("tahun", year);
+      if (date) {
+        form_data.append("tgl", datePilih[2]);
+        form_data.append("bulan", months[parseInt(datePilih[1]) - 1]);
+        form_data.append("tahun", datePilih[0]);
+      }
       form_data.append("nama_bidang", val.nama_bidang);
       // form_data.append("no_rw", rw[0].no_rw);
-      form_data.append("nama_kegiatan", val.nama_kegiatan);
-      form_data.append("jumlah_orang", val.jumlah_orang);
-      form_data.append("waktu", val.waktu);
+      form_data.append(
+        "nama_kegiatan",
+        subKegiatan ? subKegiatan : val.nama_kegiatan
+      );
+      form_data.append("barang", parseInt(val.barang));
+      form_data.append("satuan_barang", val.satuan_barang);
+      form_data.append("waktu", parseInt(val.waktu));
+      form_data.append("satuan_waktu", "Kali");
       form_data.append(
         "jumlah_biaya",
-        val.jumlah_orang * val.pembayaran_per_orang * val.waktu
+        parseInt(val.barang) *
+          parseInt(val.pembayaran_per_orang) *
+          parseInt(val.waktu)
       );
 
       form_data.append("pembayaran_per_orang", val.pembayaran_per_orang);
       form_data.append("jumlah_orang_terlibat", val.jumlah_orang_terlibat);
-      // console.log(val);
+
       open.updateState(true, false, "success", "");
-      // console.log(form_data);
-      // console.log(auth.getCurrentUser().RWId);
-      const gh = await registerData(form_data);
-      // console.log(gh);
+
+      await registerData(form_data);
 
       if (updateSub) {
         setVal({
@@ -207,21 +292,13 @@ const FormInput = () => {
         });
       }
 
-      // if (auth.getCurrentUser()) {
-      //   setVal({
-      //     ...val,
-      //     // no_rw: auth.getCurrentUser().no_rw,
-      //     kelurahan: "BOJONGSOANG",
-      //     kecamatan: "BUAHBATU",
-      //     kota: "Bandung",
-      //     bulan: month,
-      //     tahun: year,
-      //   });
-      // }
-      // await registerData(val);
-
       open.updateState(false, true, "success", "membuat kegiatan berhasil");
-      // console.log(open);
+
+      setA("");
+      setB("");
+      setC("");
+      setD("");
+      setE("");
       setVal({
         no_rw: "",
         kelurahan: "",
@@ -231,12 +308,16 @@ const FormInput = () => {
         tahun: "",
         nama_bidang: "",
         nama_kegiatan: "",
-        jumlah_orang: "",
+        barang: "",
+        satuan_barang: "",
         waktu: "",
+        satuan_waktu: "",
         pembayaran_per_orang: "",
         jumlah_biaya: "",
         jumlah_orang_terlibat: "",
       });
+      setSubKegiatan("");
+      setDate("");
     } catch (ex) {
       console.log(ex);
       if (!ex.response) {
@@ -253,10 +334,15 @@ const FormInput = () => {
   React.useEffect(() => {
     getRW();
   }, []);
+
   return (
     <div className={classes.wrap}>
       <Card>
-        <form onSubmit={doSubmit} encType="multipart/form-data">
+        <form
+          onSubmit={doSubmit}
+          encType="multipart/form-data"
+          autoComplete="off"
+        >
           <CardHeader
             action={
               <IconButton aria-label="expand">
@@ -299,9 +385,7 @@ const FormInput = () => {
                     <option value="Bidang Kesehatan">
                       {"Bidang Kesehatan"}
                     </option>
-                    <option value="Bidang Kemasyarakatan">
-                      {"Bidang Kemasyarakatan"}
-                    </option>
+
                     <option value="Bidang Kebersihan dan Lingkungan Hidup">
                       {"Bidang Kebersihan dan Lingkungan Hidup"}
                     </option>
@@ -717,7 +801,7 @@ const FormInput = () => {
                 {val.nama_kegiatan === "penguatan" && (
                   <FormControl component="fieldset">
                     <FormLabel component="legend">
-                      Pilih Kegiatan Spesifik :{" "}
+                      Pilih Kegiatan Spesifik :
                     </FormLabel>
                     <RadioGroup
                       aria-label="kegiatan"
@@ -746,12 +830,12 @@ const FormInput = () => {
                 {val.nama_kegiatan === "lain" && (
                   <TextField
                     id="standard-full-width"
-                    label="Input Nama Kegiatanya"
+                    label="Input Nama Kegiatan"
                     style={{ margin: 8 }}
                     onChange={updateSub}
                     name="subKegiatan"
                     value={subKegiatan}
-                    type={"text"}
+                    type="text"
                     placeholder="Kegiatan"
                     fullWidth
                     margin="normal"
@@ -762,53 +846,115 @@ const FormInput = () => {
                 )}
                 {val.nama_kegiatan && (
                   <React.Fragment>
-                    <TextField
-                      fullWidth
-                      //   error={ref.pph}
-                      //   helperText={ref.pph ? ref.message : ""}
-                      //   inputRef={namaRef}
-                      autoComplete="off"
-                      label="Jumlah Orang"
-                      margin="dense"
-                      name="jumlah_orang"
-                      type="number"
-                      inputProps={{
-                        step: 0.05,
-                      }}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">Org</InputAdornment>
-                        ),
-                      }}
-                      onChange={updateField}
-                      required
-                      value={val.jumlah_orang}
-                      variant="outlined"
+                    <Box paddingTop="5px" />
+                    <FormLabel component="legend">
+                      Masukan Tanggal Kegiatan :
+                    </FormLabel>
+                    <DatePicker
+                      onChange={onChangeDate}
+                      value={date !== "" ? moment(date) : null}
+                      style={{ width: "100%" }}
                     />
+                    <Box paddingTop="5px" />
+                    <FormLabel component="legend">
+                      Masukan Jumlah Waktu Kegiatan :
+                    </FormLabel>
+                    <Input.Group compact style={{ display: "flex" }}>
+                      {/* <InputNumber
+                        style={{ flexGrow: 1, color: "black" }}
+                        placeholder="Masukan Waktu"
+                        onChange={(event) => {
+                          console.log(event.target.value);
+                          // setVal({ ...val, waktu: e.target.value });
+                        }}
+                        // name="waktu"
+                        required
+                        // value={val.waktu}
+                      /> */}
+                      <TextField
+                        fullWidth
+                        autoComplete="off"
+                        label="Masukan waktu"
+                        margin="dense"
+                        name="waktu"
+                        type="number"
+                        inputProps={{
+                          step: 1,
+                        }}
+                        onChange={updateField}
+                        required
+                        value={val.waktu}
+                        variant="outlined"
+                      />
 
-                    <TextField
-                      fullWidth
-                      //   error={ref.pph}
-                      //   helperText={ref.pph ? ref.message : ""}
-                      //   inputRef={namaRef}
-                      autoComplete="off"
-                      label="Waktu"
-                      margin="dense"
-                      name="waktu"
-                      type="number"
-                      inputProps={{
-                        step: 0.05,
-                      }}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">Bln</InputAdornment>
-                        ),
-                      }}
-                      onChange={updateField}
-                      required
-                      value={val.waktu}
-                      variant="outlined"
-                    />
+                      <SelectAnt
+                        onChange={selectSatuanWaktu}
+                        defaultValue={"Kali"}
+                        // value={val.satuan_waktu}
+                        style={{ minWidth: "100px", paddingTop: "10px" }}
+                      >
+                        <Option value={"Kali"}>Kali</Option>
+                        <Option value={"Jam"}>Jam</Option>
+                        <Option value={"Hari"}>Hari</Option>
+                        <Option value={"Minggu"}>Minggu</Option>
+                        <Option value={"Bulan"}>Bulan</Option>
+                        <Option value={"Tahun"}>Tahun</Option>
+                      </SelectAnt>
+                    </Input.Group>
+                    <Box paddingTop="5px" />
+                    <FormLabel component="legend">
+                      Masukan Jumlah Barang/Orang :
+                    </FormLabel>
+                    <Input.Group compact style={{ display: "flex" }}>
+                      <TextField
+                        fullWidth
+                        autoComplete="off"
+                        label="Masukan Jumlah Barang/Orang"
+                        margin="dense"
+                        name="barang"
+                        type="number"
+                        inputProps={{
+                          step: 1,
+                        }}
+                        onChange={updateField}
+                        required
+                        value={val.barang}
+                        variant="outlined"
+                      />
+                      <TextField
+                        fullWidth
+                        autoComplete="off"
+                        label="Masukan Satuan"
+                        margin="dense"
+                        name="satuan_barang"
+                        type="text"
+                        onChange={updateField}
+                        required
+                        value={val.satuan_barang}
+                        variant="outlined"
+                      />
+                      {/* <InputNumber
+                        style={{ flexGrow: 1, color: "black" }}
+                        placeholder="Masukan Jumlah Barang/Orang"
+                        onChange={(event) => {
+                          console.log(event.currentTarget);
+                          // setVal({ ...val, barang: event.target.value });
+                        }}
+                        required
+                        defaultValue={val.barang}
+                      />
+                      <Input
+                        style={{ minWidth: "0px" }}
+                        placeholder="Satuan"
+                        // defaultValue={1000}
+                        onChange={(event) => {
+                          setVal({ ...val, satuan_barang: event.target.value });
+                        }}
+                        required
+                        defaultValue={val.satuan_barang}
+                        // value={val.satuan_barang}
+                      /> */}
+                    </Input.Group>
 
                     <TextField
                       fullWidth
@@ -836,30 +982,6 @@ const FormInput = () => {
 
                     <TextField
                       fullWidth
-                      autoComplete="off"
-                      label="Jumlah Biaya"
-                      margin="dense"
-                      name="jumlah_biaya"
-                      type="number"
-                      inputProps={{
-                        step: 0.05,
-                      }}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="end">Rp.</InputAdornment>
-                        ),
-                      }}
-                      onChange={updateField}
-                      required
-                      disabled
-                      value={
-                        val.jumlah_orang * val.pembayaran_per_orang * val.waktu
-                      }
-                      variant="outlined"
-                    />
-
-                    <TextField
-                      fullWidth
                       //   error={ref.pph}
                       //   helperText={ref.pph ? ref.message : ""}
                       //   inputRef={namaRef}
@@ -879,6 +1001,31 @@ const FormInput = () => {
                       onChange={updateField}
                       required
                       value={val.jumlah_orang_terlibat}
+                      variant="outlined"
+                    />
+                    <TextField
+                      fullWidth
+                      autoComplete="off"
+                      label="Jumlah Biaya"
+                      margin="dense"
+                      name="jumlah_biaya"
+                      type="number"
+                      inputProps={{
+                        step: 0.05,
+                      }}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="end">Rp.</InputAdornment>
+                        ),
+                      }}
+                      onChange={updateField}
+                      required
+                      disabled
+                      value={
+                        parseInt(val.barang) *
+                        parseInt(val.pembayaran_per_orang) *
+                        parseInt(val.waktu)
+                      }
                       variant="outlined"
                     />
                   </React.Fragment>
@@ -909,31 +1056,63 @@ const FormInput = () => {
                   </label>
 
                   <Divider />
-                  <List component="nav" aria-label="secondary mailbox folders">
+                  <List
+                    component="nav"
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      overflowX: "auto",
+                    }}
+                  >
                     {a && (
-                      <ListItem button>
-                        <ListItemText primary={a.name} />
-                      </ListItem>
+                      <Box padding="10px">
+                        <Avatar
+                          variant="rounded"
+                          alt={a.name}
+                          src={URL.createObjectURL(a)}
+                          className={classes.large}
+                        />
+                      </Box>
                     )}
                     {b && (
-                      <ListItem button>
-                        <ListItemText primary={b.name} />
-                      </ListItem>
+                      <Box padding="10px">
+                        <Avatar
+                          variant="rounded"
+                          alt={b.name}
+                          src={URL.createObjectURL(b)}
+                          className={classes.large}
+                        />
+                      </Box>
                     )}
                     {c && (
-                      <ListItem button>
-                        <ListItemText primary={c.name} />
-                      </ListItem>
+                      <Box padding="10px">
+                        <Avatar
+                          variant="rounded"
+                          alt={c.name}
+                          src={URL.createObjectURL(c)}
+                          className={classes.large}
+                        />
+                      </Box>
                     )}
                     {d && (
-                      <ListItem button>
-                        <ListItemText primary={d.name} />
-                      </ListItem>
+                      <Box padding="10px">
+                        <Avatar
+                          variant="rounded"
+                          alt={d.name}
+                          src={URL.createObjectURL(d)}
+                          className={classes.large}
+                        />
+                      </Box>
                     )}
                     {e && (
-                      <ListItem button>
-                        <ListItemText primary={e.name} />
-                      </ListItem>
+                      <Box padding="10px">
+                        <Avatar
+                          variant="rounded"
+                          alt={e.name}
+                          src={URL.createObjectURL(e)}
+                          className={classes.large}
+                        />
+                      </Box>
                     )}
                   </List>
                 </Paper>

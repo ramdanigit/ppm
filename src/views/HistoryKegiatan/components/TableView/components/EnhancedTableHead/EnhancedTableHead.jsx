@@ -7,30 +7,6 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 
 const headCells = [
   {
-    id: "no_rw",
-    numeric: false,
-    disablePadding: false,
-    label: "No RW",
-  },
-  {
-    id: "kelurahan",
-    numeric: false,
-    disablePadding: false,
-    label: "Kelurahan",
-  },
-  {
-    id: "kecamatan",
-    numeric: false,
-    disablePadding: false,
-    label: "Kecamatan",
-  },
-  {
-    id: "kota",
-    numeric: false,
-    disablePadding: false,
-    label: "Kota",
-  },
-  {
     id: "bulan",
     numeric: false,
     disablePadding: false,
@@ -77,6 +53,12 @@ const headCells = [
     numeric: false,
     disablePadding: false,
     label: "Jumlah Orang Terlibat/Manfaat",
+  },
+  {
+    id: "jumlah_biaya",
+    numeric: false,
+    disablePadding: false,
+    label: "Jumlah Biaya",
   },
 ];
 function EnhancedTableHead(props) {
@@ -275,69 +257,6 @@ function EnhancedTableHead(props) {
           >
             {headCells[8].label}
             {orderBy === headCells[8].id ? (
-              <span className={classes.visuallyHidden}>
-                {order === "desc" ? "sorted descending" : "sorted ascending"}
-              </span>
-            ) : null}
-          </TableSortLabel>
-        </TableCell>
-        <TableCell
-          id={headCells[9].id}
-          key={headCells[9].id}
-          align="left"
-          padding={headCells[9].disablePadding ? "none" : "default"}
-          sortDirection={orderBy === headCells[9].id ? order : false}
-          className={classes.cell}
-        >
-          <TableSortLabel
-            active={orderBy === headCells[9].id}
-            direction={orderBy === headCells[9].id ? order : "asc"}
-            onClick={createSortHandler(headCells[9].id)}
-          >
-            {headCells[9].label}
-            {orderBy === headCells[9].id ? (
-              <span className={classes.visuallyHidden}>
-                {order === "desc" ? "sorted descending" : "sorted ascending"}
-              </span>
-            ) : null}
-          </TableSortLabel>
-        </TableCell>
-        <TableCell
-          id={headCells[10].id}
-          key={headCells[10].id}
-          align="left"
-          padding={headCells[10].disablePadding ? "none" : "default"}
-          sortDirection={orderBy === headCells[10].id ? order : false}
-          className={classes.cell}
-        >
-          <TableSortLabel
-            active={orderBy === headCells[10].id}
-            direction={orderBy === headCells[10].id ? order : "asc"}
-            onClick={createSortHandler(headCells[10].id)}
-          >
-            {headCells[10].label}
-            {orderBy === headCells[10].id ? (
-              <span className={classes.visuallyHidden}>
-                {order === "desc" ? "sorted descending" : "sorted ascending"}
-              </span>
-            ) : null}
-          </TableSortLabel>
-        </TableCell>
-        <TableCell
-          id={headCells[11].id}
-          key={headCells[11].id}
-          align="left"
-          padding={headCells[11].disablePadding ? "none" : "default"}
-          sortDirection={orderBy === headCells[11].id ? order : false}
-          className={classes.cell}
-        >
-          <TableSortLabel
-            active={orderBy === headCells[11].id}
-            direction={orderBy === headCells[11].id ? order : "asc"}
-            onClick={createSortHandler(headCells[11].id)}
-          >
-            {headCells[11].label}
-            {orderBy === headCells[11].id ? (
               <span className={classes.visuallyHidden}>
                 {order === "desc" ? "sorted descending" : "sorted ascending"}
               </span>

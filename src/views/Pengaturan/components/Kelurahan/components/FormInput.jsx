@@ -82,14 +82,13 @@ const FormInput = () => {
 
   const doSubmit = async (e) => {
     e.preventDefault();
-    // console.log(val);
+    console.log(val);
     try {
       open.updateState(true, false, "success", "");
-      const c = "kel-" + val.kelurahan;
+      const c =
+        "kel-" + val.kelurahan ? val.kelurahan.replace(/[\s]/g, "-") : "";
+      console.log(val);
       await register(val, c);
-      // console.log(a.data.id);
-
-      // await registerUser(val, c, a.data.id);
 
       open.updateState(false, true, "success", "membuat kelurahan berhasil");
 
@@ -198,7 +197,7 @@ const FormInput = () => {
                   required
                   disabled
                   color="primary"
-                  value={"kel-" + val.kelurahan.toLowerCase()}
+                  value={"kel-" + val.kelurahan.toLowerCase().replace()}
                   onChange={updateField}
                   fullWidth
                   label="Username"

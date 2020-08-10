@@ -5,25 +5,10 @@ import { makeStyles } from "@material-ui/styles";
 import { Divider, Drawer } from "@material-ui/core";
 
 import HomeIcon from "@material-ui/icons/Home";
-import DashboardIcon from "@material-ui/icons/Dashboard";
-import AccountBoxIcon from "@material-ui/icons/AccountBox";
-import SettingsIcon from "@material-ui/icons/Settings";
-import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
-import StorageIcon from "@material-ui/icons/Storage";
-import GavelIcon from "@material-ui/icons/Gavel";
-import SearchIcon from "@material-ui/icons/Search";
-import CachedIcon from "@material-ui/icons/Cached";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import AccountTreeIcon from "@material-ui/icons/AccountTree";
-import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
-import RecentActorsIcon from "@material-ui/icons/RecentActors";
-import RestoreIcon from "@material-ui/icons/Restore";
-import SwapVertIcon from "@material-ui/icons/SwapVert";
-import LocalAtmIcon from "@material-ui/icons/LocalAtm";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
-import { Profile, SidebarNav, SidebarExpand, ItemExpand } from "./components";
+import { SidebarNav } from "./components";
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
